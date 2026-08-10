@@ -1,0 +1,13 @@
+{
+  "app.name": "Valero Aviation Tools",
+  "app.tagline": "Suite educativa de cálculo aeronáutico",
+  "nav.home": "Inicio",
+  "nav.wind": "Viento",
+  "nav.toc": "TOC",
+  "nav.tod": "TOD",
+  "nav.time": "Tiempos",
+  "nav.fuel": "Combustible",
+  "nav.sources": "Fuentes",
+  "nav.about": "Acerca de",
+  "disclaimer.operational": "Este cálculo es una referencia educativa y no reemplaza la planificación operacional, el POH/AFM, el FCOM, el manual de operaciones, el despacho de vuelo, la información meteorológica oficial, los NOTAM, el AIP, las instrucciones ATC ni los requisitos vigentes de Aerocivil."
+}
