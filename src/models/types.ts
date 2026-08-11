@@ -3,12 +3,6 @@ export type DistanceUnit = 'NM' | 'km';
 export type AltitudeUnit = 'ft' | 'm';
 export type VolumeUnit = 'L' | 'usgal' | 'impgal' | 'kg';
 export type WindReference = 'magnetic' | 'true';
-export type OperationType =
-  | 'AG_VFR'
-  | 'AG_IFR'
-  | 'COMMERCIAL_RAC121'
-  | 'AIRTAXI_RAC135'
-  | 'OTHER';
 export type CertaintyLevel =
   | 'verified'
   | 'reference_intl'
@@ -114,42 +108,15 @@ export interface TimeResult {
 }
 
 export interface FuelData {
-  operation: OperationType;
-  rules: 'VFR' | 'IFR';
-  density: number;
   unit: VolumeUnit;
-  taxiTimeMin?: number;
-  taxiFlowPerHour?: number;
-  taxiFuelCustom?: number;
   tripTimeMin?: number;
   tripFlowPerHour?: number;
   tripFuelCustom?: number;
-  alternateTimeMin?: number;
-  alternateFlowPerHour?: number;
-  alternateFuelCustom?: number;
-  finalReserveMin?: number;
-  finalReserveFlow?: number;
-  finalReserveFuelCustom?: number;
-  contingencyPercent?: number;
-  additional?: number;
-  extra?: number;
-  fuelOnBoard?: number;
-  margin?: number;
 }
 
 export interface FuelResult {
-  breakdown: Record<string, number>;
   trip: number;
-  taxi: number;
-  contingency: number;
-  alternate: number;
-  finalReserve: number;
-  minDiversion: number;
-  totalRequired: number;
-  fuelOnBoard?: number;
-  remaining?: number;
-  deficit?: number;
-  alert: boolean;
+  unit: VolumeUnit;
 }
 
 export interface FormulaMeta {

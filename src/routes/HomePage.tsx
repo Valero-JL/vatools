@@ -25,7 +25,7 @@ const MODULES = [
   {
     to: '/fuel',
     title: 'Combustible',
-    desc: 'Cálculo de trip fuel y minimum diversion fuel con alertas de déficit.',
+    desc: 'Cálculo básico de trip fuel: tiempo de viaje × flujo de consumo.',
   },
 ];
 

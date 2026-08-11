@@ -53,20 +53,6 @@ export const WARNINGS: WarningMessage[] = [
     location: 'tod',
     blocking: false,
   },
-  {
-    id: 'fuel-pending-rac',
-    text: 'Los valores de reserva/contingencia por defecto son referencia internacional o formativa — pendiente de validación normativa oficial (RAC 91/121/135).',
-    level: 'caution',
-    location: 'fuel',
-    blocking: false,
-  },
-  {
-    id: 'fuel-deficit',
-    text: 'El combustible a bordo es inferior al mínimo calculado. Resultado no seguro: revisa el desglose y la planificación.',
-    level: 'warning',
-    location: 'fuel',
-    blocking: true,
-  },
 ];
 
 export function getWarning(id: string): WarningMessage | undefined {

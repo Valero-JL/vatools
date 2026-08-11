@@ -31,3 +31,6 @@ dist-ssr/
 # OS / misc
 Thumbs.db
 *.tsbuildinfo
+
+# macOS AppleDouble files
+._*

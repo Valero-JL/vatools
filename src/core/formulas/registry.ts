@@ -77,18 +77,16 @@ export const FORMULAS: Record<string, FormulaMeta> = {
     ],
   },
   fuel: {
-    id: 'fuel-block',
-    version: '1.0.0',
-    source: 'OACI Doc 9976 / Anexo 6 (referencia internacional); RAC pendiente de validación',
+    id: 'fuel-trip',
+    version: '2.0.0',
+    source: 'Cinemática básica de consumo (tiempo × flujo)',
     nature: 'educational',
-    certainty: 'pending_regulatory',
-    formula:
-      'Block = Taxi + Trip + Contingency + Alternate + Final Reserve + Additional + Extra + Margin; MDF = Alternate + Final Reserve',
+    certainty: 'verified',
+    formula: 'Trip fuel = (tiempo_min / 60) × flujo_por_hora  (o cantidad manual)',
     assumptions: [
-      'Los valores de reserva/contingencia por defecto son referenciales [REF. INTERNACIONAL].',
-      'Requisitos RAC 91/121/135: pendientes de validación normativa oficial.',
-      'Trip fuel se calcula a partir del tiempo y flujo estimado del trayecto.',
-      'MDF (Minimum Diversion Fuel) representa el combustible mínimo para proceder al alterno y aterrizar con la reserva final reglamentaria.',
+      'No incluye taxi, contingencia, alterno, reserva final ni márgenes operacionales.',
+      'El flujo se asume constante durante el tiempo de viaje indicado.',
+      'Si se indica cantidad manual, esa tiene prioridad sobre tiempo × flujo.',
     ],
   },
 };
