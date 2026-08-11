@@ -113,23 +113,24 @@ export interface TimeResult {
   unitLabel: string;
 }
 
-export interface FuelPhase {
-  name: string;
-  timeMin?: number;
-  flowPerHour?: number;
-  fuel?: number;
-}
-
 export interface FuelData {
   operation: OperationType;
   rules: 'VFR' | 'IFR';
-  phases: FuelPhase[];
   density: number;
   unit: VolumeUnit;
-  alternate?: { timeMin?: number; flowPerHour?: number; fuel?: number };
-  contingencyPercent?: number;
+  taxiTimeMin?: number;
+  taxiFlowPerHour?: number;
+  taxiFuelCustom?: number;
+  tripTimeMin?: number;
+  tripFlowPerHour?: number;
+  tripFuelCustom?: number;
+  alternateTimeMin?: number;
+  alternateFlowPerHour?: number;
+  alternateFuelCustom?: number;
   finalReserveMin?: number;
   finalReserveFlow?: number;
+  finalReserveFuelCustom?: number;
+  contingencyPercent?: number;
   additional?: number;
   extra?: number;
   fuelOnBoard?: number;
@@ -139,6 +140,11 @@ export interface FuelData {
 export interface FuelResult {
   breakdown: Record<string, number>;
   trip: number;
+  taxi: number;
+  contingency: number;
+  alternate: number;
+  finalReserve: number;
+  minDiversion: number;
   totalRequired: number;
   fuelOnBoard?: number;
   remaining?: number;

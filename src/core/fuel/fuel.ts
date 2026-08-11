@@ -18,15 +18,30 @@ export const FUEL_DEFAULTS_REF = {
 } as const;
 
 export function phaseFuel(timeMin?: number, flowPerHour?: number, fuel?: number): number {
-  if (fuel !== undefined) return fuel;
-  if (timeMin !== undefined && flowPerHour !== undefined) {
+  if (fuel !== undefined && fuel !== null && !isNaN(fuel)) return fuel;
+  if (timeMin !== undefined && timeMin !== null && !isNaN(timeMin) &&
+      flowPerHour !== undefined && flowPerHour !== null && !isNaN(flowPerHour)) {
     return (timeMin / 60) * flowPerHour;
   }
   return 0;
 }
 
+export function getFuelLabel(key: string): string {
+  const labels: Record<string, string> = {
+    taxi: 'Rodaje (Taxi)',
+    trip: 'Viaje (Trip fuel)',
+    contingency: 'Contingencia',
+    alternate: 'Alterno (Desvío)',
+    finalReserve: 'Reserva final',
+    additional: 'Adicional',
+    extra: 'Extra',
+    margin: 'Margen',
+  };
+  return labels[key] || key;
+}
+
 /**
- * Cálculo modular educativo de combustible.
+ * Cálculo modular educativo de combustible simplificado.
  * Los mínimos normativos por defecto se etiquetan como pendientes de validación.
  */
 export function calculateFuel(input: FuelData): FuelResult {
@@ -37,52 +52,66 @@ export function calculateFuel(input: FuelData): FuelResult {
     throw new FuelValidationError('La densidad debe ser mayor que 0');
   }
 
-  for (const p of input.phases) {
-    if ((p.timeMin !== undefined && p.timeMin < 0) || (p.flowPerHour !== undefined && p.flowPerHour < 0) || (p.fuel !== undefined && p.fuel < 0)) {
-      throw new FuelValidationError('Flujos y tiempos deben ser ≥ 0');
+  // Validaciones de valores no negativos
+  const checkNonNegative = (val?: number, name?: string) => {
+    if (val !== undefined && val !== null && !isNaN(val) && val < 0) {
+      throw new FuelValidationError(`${name || 'El valor'} no puede ser negativo`);
     }
-  }
+  };
 
-  const breakdown: Record<string, number> = {};
-  let trip = 0;
+  checkNonNegative(input.taxiTimeMin, 'Tiempo de taxi');
+  checkNonNegative(input.taxiFlowPerHour, 'Flujo de taxi');
+  checkNonNegative(input.taxiFuelCustom, 'Combustible de taxi');
+  checkNonNegative(input.tripTimeMin, 'Tiempo de viaje');
+  checkNonNegative(input.tripFlowPerHour, 'Flujo de viaje');
+  checkNonNegative(input.tripFuelCustom, 'Combustible de viaje');
+  checkNonNegative(input.alternateTimeMin, 'Tiempo de alterno');
+  checkNonNegative(input.alternateFlowPerHour, 'Flujo de alterno');
+  checkNonNegative(input.alternateFuelCustom, 'Combustible de alterno');
+  checkNonNegative(input.finalReserveMin, 'Tiempo de reserva');
+  checkNonNegative(input.finalReserveFlow, 'Flujo de reserva');
+  checkNonNegative(input.finalReserveFuelCustom, 'Combustible de reserva');
+  checkNonNegative(input.additional, 'Adicional');
+  checkNonNegative(input.extra, 'Extra');
+  checkNonNegative(input.margin, 'Margen');
+  checkNonNegative(input.fuelOnBoard, 'Combustible a bordo');
 
-  for (const p of input.phases) {
-    const f = round(phaseFuel(p.timeMin, p.flowPerHour, p.fuel), 2);
-    breakdown[p.name] = f;
-    if (p.name !== 'taxi') {
-      trip += f;
-    }
-  }
-  trip = round(trip, 2);
-  const taxi = breakdown['taxi'] ?? 0;
+  // 1. Taxi
+  const taxi = round(phaseFuel(input.taxiTimeMin, input.taxiFlowPerHour, input.taxiFuelCustom), 2);
 
-  const contingencyPercent =
-    input.contingencyPercent ?? defaultContingency(input.operation);
+  // 2. Trip
+  const trip = round(phaseFuel(input.tripTimeMin, input.tripFlowPerHour, input.tripFuelCustom), 2);
+
+  // 3. Contingency
+  const contingencyPercent = input.contingencyPercent ?? defaultContingency(input.operation);
   const contingency = round((trip * contingencyPercent) / 100, 2);
-  breakdown['contingency'] = contingency;
 
-  const alternate = round(
-    phaseFuel(
-      input.alternate?.timeMin,
-      input.alternate?.flowPerHour,
-      input.alternate?.fuel,
-    ),
-    2,
-  );
-  breakdown['alternate'] = alternate;
+  // 4. Alternate
+  const alternate = round(phaseFuel(input.alternateTimeMin, input.alternateFlowPerHour, input.alternateFuelCustom), 2);
 
-  const finalReserveMin =
-    input.finalReserveMin ?? defaultFinalReserveMin(input.operation, input.rules);
-  const finalReserveFlow = input.finalReserveFlow ?? averageCruiseFlow(input);
-  const finalReserve = round((finalReserveMin / 60) * finalReserveFlow, 2);
-  breakdown['finalReserve'] = finalReserve;
+  // 5. Final Reserve
+  const finalReserveMin = input.finalReserveMin ?? defaultFinalReserveMin(input.operation, input.rules);
+  const finalReserveFlow = input.finalReserveFlow ?? input.tripFlowPerHour ?? 0;
+  const finalReserve = round(phaseFuel(finalReserveMin, finalReserveFlow, input.finalReserveFuelCustom), 2);
 
+  // Minimum Diversion Fuel = Alternate + Final Reserve
+  const minDiversion = round(alternate + finalReserve, 2);
+
+  // Otros
   const additional = round(input.additional ?? 0, 2);
   const extra = round(input.extra ?? 0, 2);
   const margin = round(input.margin ?? 0, 2);
-  breakdown['additional'] = additional;
-  breakdown['extra'] = extra;
-  breakdown['margin'] = margin;
+
+  const breakdown: Record<string, number> = {
+    taxi,
+    trip,
+    contingency,
+    alternate,
+    finalReserve,
+    additional,
+    extra,
+    margin,
+  };
 
   const totalRequired = round(
     taxi + trip + contingency + alternate + finalReserve + additional + extra + margin,
@@ -94,10 +123,7 @@ export function calculateFuel(input: FuelData): FuelResult {
   let deficit: number | undefined;
   let alert = false;
 
-  if (fuelOnBoard !== undefined) {
-    if (fuelOnBoard < 0) {
-      throw new FuelValidationError('El combustible a bordo no puede ser negativo');
-    }
+  if (fuelOnBoard !== undefined && fuelOnBoard !== null && !isNaN(fuelOnBoard)) {
     remaining = round(fuelOnBoard - (taxi + trip), 2);
     if (fuelOnBoard < totalRequired) {
       alert = true;
@@ -108,6 +134,11 @@ export function calculateFuel(input: FuelData): FuelResult {
   return {
     breakdown,
     trip,
+    taxi,
+    contingency,
+    alternate,
+    finalReserve,
+    minDiversion,
     totalRequired,
     fuelOnBoard,
     remaining,
@@ -117,7 +148,6 @@ export function calculateFuel(input: FuelData): FuelResult {
 }
 
 function defaultContingency(op: OperationType): number {
-  // Referencia OACI ≥5% trip — pendiente de validación RAC comercial
   if (op === 'COMMERCIAL_RAC121' || op === 'AIRTAXI_RAC135') {
     return FUEL_DEFAULTS_REF.contingencyPercentOaci;
   }
@@ -126,18 +156,9 @@ function defaultContingency(op: OperationType): number {
 
 function defaultFinalReserveMin(op: OperationType, rules: 'VFR' | 'IFR'): number {
   if (op === 'AG_VFR' || (op === 'OTHER' && rules === 'VFR')) {
-    // 45 min — pendiente de validación normativa oficial RAC 91
     return FUEL_DEFAULTS_REF.vfrDayReserveMin;
   }
-  // 30 min espera — referencia OACI jet
   return FUEL_DEFAULTS_REF.finalReserveJetMin;
-}
-
-function averageCruiseFlow(input: FuelData): number {
-  const cruise = input.phases.find((p) => p.name === 'cruise');
-  if (cruise?.flowPerHour) return cruise.flowPerHour;
-  const withFlow = input.phases.find((p) => p.flowPerHour && p.flowPerHour > 0);
-  return withFlow?.flowPerHour ?? 0;
 }
 
 export function certaintyLabelForFuel(): string {

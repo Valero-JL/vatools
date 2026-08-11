@@ -19,6 +19,7 @@ import {
   certaintyLabelForFuel,
   FUEL_DEFAULTS_REF,
   FuelValidationError,
+  getFuelLabel,
 } from '../core/fuel/fuel';
 import type { FuelResult, OperationType, VolumeUnit } from '../models/types';
 import { getWarning } from '../data/warnings';
@@ -36,25 +37,40 @@ export function FuelPage() {
   const [rules, setRules] = useState<'VFR' | 'IFR'>('VFR');
   const [unit, setUnit] = useState<VolumeUnit>('L');
   const [density, setDensity] = useState<number>(FUEL_DEFAULTS_REF.densityAvgas100LL);
+
+  // Taxi
   const [taxiMin, setTaxiMin] = useState('10');
   const [taxiFlow, setTaxiFlow] = useState('30');
-  const [climbMin, setClimbMin] = useState('12');
-  const [climbFlow, setClimbFlow] = useState('60');
-  const [cruiseMin, setCruiseMin] = useState('60');
-  const [cruiseFlow, setCruiseFlow] = useState('40');
-  const [descentMin, setDescentMin] = useState('15');
-  const [descentFlow, setDescentFlow] = useState('25');
-  const [approachMin, setApproachMin] = useState('10');
-  const [approachFlow, setApproachFlow] = useState('35');
+  const [taxiFuelCustom, setTaxiFuelCustom] = useState('');
+
+  // Trip
+  const [tripMin, setTripMin] = useState('60');
+  const [tripFlow, setTripFlow] = useState('40');
+  const [tripFuelCustom, setTripFuelCustom] = useState('');
+
+  // Alternate
   const [altMin, setAltMin] = useState('0');
   const [altFlow, setAltFlow] = useState('40');
-  const [contingency, setContingency] = useState('');
+  const [altFuelCustom, setAltFuelCustom] = useState('');
+
+  // Final Reserve
   const [finalMin, setFinalMin] = useState('');
+  const [finalFlow, setFinalFlow] = useState('');
+  const [finalFuelCustom, setFinalFuelCustom] = useState('');
+
+  // Decisions
+  const [contingency, setContingency] = useState('');
   const [additional, setAdditional] = useState('0');
   const [extra, setExtra] = useState('0');
+  const [margin, setMargin] = useState('0');
   const [fob, setFob] = useState('120');
+
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<FuelResult | null>(null);
+
+  const handleReset = () => {
+    setResult(null);
+  };
 
   const compute = () => {
     try {
@@ -64,22 +80,22 @@ export function FuelPage() {
         rules,
         density,
         unit,
-        phases: [
-          { name: 'taxi', timeMin: Number(taxiMin), flowPerHour: Number(taxiFlow) },
-          { name: 'climb', timeMin: Number(climbMin), flowPerHour: Number(climbFlow) },
-          { name: 'cruise', timeMin: Number(cruiseMin), flowPerHour: Number(cruiseFlow) },
-          { name: 'descent', timeMin: Number(descentMin), flowPerHour: Number(descentFlow) },
-          { name: 'approach', timeMin: Number(approachMin), flowPerHour: Number(approachFlow) },
-        ],
-        alternate: {
-          timeMin: Number(altMin) || 0,
-          flowPerHour: Number(altFlow) || 0,
-        },
-        contingencyPercent: contingency === '' ? undefined : Number(contingency),
+        taxiTimeMin: taxiMin === '' ? undefined : Number(taxiMin),
+        taxiFlowPerHour: taxiFlow === '' ? undefined : Number(taxiFlow),
+        taxiFuelCustom: taxiFuelCustom === '' ? undefined : Number(taxiFuelCustom),
+        tripTimeMin: tripMin === '' ? undefined : Number(tripMin),
+        tripFlowPerHour: tripFlow === '' ? undefined : Number(tripFlow),
+        tripFuelCustom: tripFuelCustom === '' ? undefined : Number(tripFuelCustom),
+        alternateTimeMin: altMin === '' ? undefined : Number(altMin),
+        alternateFlowPerHour: altFlow === '' ? undefined : Number(altFlow),
+        alternateFuelCustom: altFuelCustom === '' ? undefined : Number(altFuelCustom),
         finalReserveMin: finalMin === '' ? undefined : Number(finalMin),
-        finalReserveFlow: Number(cruiseFlow) || 0,
-        additional: Number(additional) || 0,
-        extra: Number(extra) || 0,
+        finalReserveFlow: finalFlow === '' ? undefined : Number(finalFlow),
+        finalReserveFuelCustom: finalFuelCustom === '' ? undefined : Number(finalFuelCustom),
+        contingencyPercent: contingency === '' ? undefined : Number(contingency),
+        additional: additional === '' ? undefined : Number(additional),
+        extra: extra === '' ? undefined : Number(extra),
+        margin: margin === '' ? undefined : Number(margin),
         fuelOnBoard: fob === '' ? undefined : Number(fob),
       });
       setResult(r);
@@ -92,7 +108,7 @@ export function FuelPage() {
   return (
     <ModulePage
       title="Combustible"
-      subtitle="Desglose modular por fases y tipo de operación. Separa cálculo, norma, performance y decisión operacional."
+      subtitle="Cálculo simplificado de combustible de viaje (Trip fuel), combustible mínimo de desvío y total requerido."
     >
       <WarningBanner warning={getWarning('fuel-pending-rac')!} />
 
@@ -130,48 +146,73 @@ export function FuelPage() {
         </p>
       </Panel>
 
-      <Panel title="Fases (performance / cálculo)">
+      <Panel title="Cálculo del Trayecto (Trip Fuel) y Rodaje (Taxi)">
         <FormGrid>
-          <Field label="Taxi — tiempo" htmlFor="taxiMin"><UnitInput id="taxiMin" type="number" unit="min" value={taxiMin} onChange={(e) => setTaxiMin(e.target.value)} /></Field>
-          <Field label="Taxi — flujo" htmlFor="taxiFlow"><UnitInput id="taxiFlow" type="number" unit={`${unit}/h`} value={taxiFlow} onChange={(e) => setTaxiFlow(e.target.value)} /></Field>
-          <Field label="Ascenso — tiempo" htmlFor="clMin"><UnitInput id="clMin" type="number" unit="min" value={climbMin} onChange={(e) => setClimbMin(e.target.value)} /></Field>
-          <Field label="Ascenso — flujo" htmlFor="clFlow"><UnitInput id="clFlow" type="number" unit={`${unit}/h`} value={climbFlow} onChange={(e) => setClimbFlow(e.target.value)} /></Field>
-          <Field label="Crucero — tiempo" htmlFor="crMin"><UnitInput id="crMin" type="number" unit="min" value={cruiseMin} onChange={(e) => setCruiseMin(e.target.value)} /></Field>
-          <Field label="Crucero — flujo" htmlFor="crFlow"><UnitInput id="crFlow" type="number" unit={`${unit}/h`} value={cruiseFlow} onChange={(e) => setCruiseFlow(e.target.value)} /></Field>
-          <Field label="Descenso — tiempo" htmlFor="deMin"><UnitInput id="deMin" type="number" unit="min" value={descentMin} onChange={(e) => setDescentMin(e.target.value)} /></Field>
-          <Field label="Descenso — flujo" htmlFor="deFlow"><UnitInput id="deFlow" type="number" unit={`${unit}/h`} value={descentFlow} onChange={(e) => setDescentFlow(e.target.value)} /></Field>
-          <Field label="Aprox. — tiempo" htmlFor="apMin"><UnitInput id="apMin" type="number" unit="min" value={approachMin} onChange={(e) => setApproachMin(e.target.value)} /></Field>
-          <Field label="Aprox. — flujo" htmlFor="apFlow"><UnitInput id="apFlow" type="number" unit={`${unit}/h`} value={approachFlow} onChange={(e) => setApproachFlow(e.target.value)} /></Field>
+          <Field label="Tiempo de viaje" htmlFor="tripMin" hint="Tiempo total estimado en ruta">
+            <UnitInput id="tripMin" type="number" unit="min" value={tripMin} onChange={(e) => setTripMin(e.target.value)} />
+          </Field>
+          <Field label="Flujo de viaje" htmlFor="tripFlow" hint="Consumo de combustible en ruta por hora">
+            <UnitInput id="tripFlow" type="number" unit={`${unit}/h`} value={tripFlow} onChange={(e) => setTripFlow(e.target.value)} />
+          </Field>
+          <Field label="Viaje manual" htmlFor="tripFuelCustom" hint="Opcional: introduce una cantidad directa de viaje">
+            <UnitInput id="tripFuelCustom" type="number" unit={unit} value={tripFuelCustom} onChange={(e) => setTripFuelCustom(e.target.value)} />
+          </Field>
+          <Field label="Tiempo de taxi" htmlFor="taxiMin" hint="Tiempo de rodaje antes del despegue">
+            <UnitInput id="taxiMin" type="number" unit="min" value={taxiMin} onChange={(e) => setTaxiMin(e.target.value)} />
+          </Field>
+          <Field label="Flujo de taxi" htmlFor="taxiFlow" hint="Consumo durante el rodaje por hora">
+            <UnitInput id="taxiFlow" type="number" unit={`${unit}/h`} value={taxiFlow} onChange={(e) => setTaxiFlow(e.target.value)} />
+          </Field>
+          <Field label="Taxi manual" htmlFor="taxiFuelCustom" hint="Opcional: introduce una cantidad directa de taxi">
+            <UnitInput id="taxiFuelCustom" type="number" unit={unit} value={taxiFuelCustom} onChange={(e) => setTaxiFuelCustom(e.target.value)} />
+          </Field>
         </FormGrid>
       </Panel>
 
-      <Panel title="Reservas, norma y decisión operacional">
+      <Panel title="Combustible de Desvío (Alterno y Reserva Final)">
         <FormGrid>
-          <Field label="Alterno — tiempo" htmlFor="altMin" hint="Cálculo / performance">
+          <Field label="Tiempo al alterno" htmlFor="altMin" hint="Tiempo estimado al aeropuerto alterno">
             <UnitInput id="altMin" type="number" unit="min" value={altMin} onChange={(e) => setAltMin(e.target.value)} />
           </Field>
-          <Field label="Alterno — flujo" htmlFor="altFlow">
+          <Field label="Flujo al alterno" htmlFor="altFlow" hint="Consumo estimado al alterno por hora">
             <UnitInput id="altFlow" type="number" unit={`${unit}/h`} value={altFlow} onChange={(e) => setAltFlow(e.target.value)} />
           </Field>
-          <Field label="Contingencia %" htmlFor="cont" hint="Norma (dejar vacío = default referencial)">
+          <Field label="Alterno manual" htmlFor="altFuelCustom" hint="Opcional: introduce una cantidad directa para el alterno">
+            <UnitInput id="altFuelCustom" type="number" unit={unit} value={altFuelCustom} onChange={(e) => setAltFuelCustom(e.target.value)} />
+          </Field>
+          <Field label="Tiempo de reserva final" htmlFor="finalMin" hint="Vacío = por defecto (45 min VFR / 30 min IFR)">
+            <UnitInput id="finalMin" type="number" unit="min" value={finalMin} onChange={(e) => setFinalMin(e.target.value)} />
+          </Field>
+          <Field label="Flujo de reserva final" htmlFor="finalFlow" hint="Vacío = usa el flujo de viaje">
+            <UnitInput id="finalFlow" type="number" unit={`${unit}/h`} value={finalFlow} onChange={(e) => setFinalFlow(e.target.value)} />
+          </Field>
+          <Field label="Reserva manual" htmlFor="finalFuelCustom" hint="Opcional: introduce una cantidad directa para reserva final">
+            <UnitInput id="finalFuelCustom" type="number" unit={unit} value={finalFuelCustom} onChange={(e) => setFinalFuelCustom(e.target.value)} />
+          </Field>
+        </FormGrid>
+      </Panel>
+
+      <Panel title="Decisión operacional y Combustible a bordo">
+        <FormGrid>
+          <Field label="Contingencia %" htmlFor="cont" hint="Norma (vacío = default por tipo de operación)">
             <UnitInput id="cont" type="number" unit="%" value={contingency} onChange={(e) => setContingency(e.target.value)} />
           </Field>
-          <Field label="Reserva final" htmlFor="fin" hint="Norma (min; vacío = default referencial)">
-            <UnitInput id="fin" type="number" unit="min" value={finalMin} onChange={(e) => setFinalMin(e.target.value)} />
-          </Field>
-          <Field label="Additional" htmlFor="add" hint="Escenario / norma específica">
+          <Field label="Combustible adicional" htmlFor="add" hint="Escenario / norma específica">
             <UnitInput id="add" type="number" unit={unit} value={additional} onChange={(e) => setAdditional(e.target.value)} />
           </Field>
-          <Field label="Extra" htmlFor="extra" hint="Decisión del comandante">
+          <Field label="Combustible extra" htmlFor="extra" hint="Decisión del comandante">
             <UnitInput id="extra" type="number" unit={unit} value={extra} onChange={(e) => setExtra(e.target.value)} />
           </Field>
-          <Field label="Combustible a bordo (FOB)" htmlFor="fob">
+          <Field label="Margen" htmlFor="margin" hint="Margen operacional">
+            <UnitInput id="margin" type="number" unit={unit} value={margin} onChange={(e) => setMargin(e.target.value)} />
+          </Field>
+          <Field label="Combustible a bordo (FOB)" htmlFor="fob" hint="Combustible total disponible al despegue">
             <UnitInput id="fob" type="number" unit={unit} value={fob} onChange={(e) => setFob(e.target.value)} />
           </Field>
         </FormGrid>
         <Actions>
           <PrimaryButton onClick={compute}>Calcular</PrimaryButton>
-          <SecondaryButton onClick={() => setResult(null)}>Limpiar resultado</SecondaryButton>
+          <SecondaryButton onClick={handleReset}>Limpiar resultado</SecondaryButton>
         </Actions>
       </Panel>
 
@@ -179,10 +220,11 @@ export function FuelPage() {
         <Panel title="Resultados">
           {result.alert && <WarningBanner warning={getWarning('fuel-deficit')!} />}
           <ResultGrid>
-            <Stat label="Trip fuel" value={`${result.trip} ${unit}`} />
-            <Stat label="Total requerido" value={`${result.totalRequired} ${unit}`} />
-            {result.fuelOnBoard !== undefined && <Stat label="FOB" value={`${result.fuelOnBoard} ${unit}`} />}
-            {result.remaining !== undefined && <Stat label="Remanente tras trip" value={`${result.remaining} ${unit}`} />}
+            <Stat label="Combustible de Viaje (Trip Fuel)" value={`${result.trip} ${unit}`} />
+            <Stat label="Mínimo Desvío (MDF)" value={`${result.minDiversion} ${unit}`} hint="Alterno + Reserva final" />
+            <Stat label="Total Requerido (Block Fuel)" value={`${result.totalRequired} ${unit}`} />
+            {result.fuelOnBoard !== undefined && <Stat label="A bordo (FOB)" value={`${result.fuelOnBoard} ${unit}`} />}
+            {result.remaining !== undefined && <Stat label="Remanente tras viaje" value={`${result.remaining} ${unit}`} hint="FOB - (Taxi + Trip)" />}
             {result.deficit !== undefined && <Stat label="Déficit" value={`${result.deficit} ${unit}`} />}
           </ResultGrid>
           <div style={{ marginTop: '1rem', overflowX: 'auto' }}>
@@ -197,16 +239,16 @@ export function FuelPage() {
               <tbody>
                 {Object.entries(result.breakdown).map(([k, v]) => (
                   <tr key={k}>
-                    <td>{k}</td>
+                    <td>{getFuelLabel(k)}</td>
                     <td align="right" className="mono">
                       {v} {unit}
                     </td>
                     <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
                       {['contingency', 'finalReserve'].includes(k)
-                        ? 'norma (pendiente validación)'
+                        ? 'Normativa (pendiente validación)'
                         : ['additional', 'extra', 'margin'].includes(k)
-                          ? 'decisión / margen'
-                          : 'cálculo / performance'}
+                          ? 'Decisión / Margen'
+                          : 'Cálculo / Performance'}
                     </td>
                   </tr>
                 ))}

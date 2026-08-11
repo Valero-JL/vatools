@@ -83,11 +83,12 @@ export const FORMULAS: Record<string, FormulaMeta> = {
     nature: 'educational',
     certainty: 'pending_regulatory',
     formula:
-      'Block = Taxi + Trip + Contingency + Alternate + Final Reserve + Additional + Extra',
+      'Block = Taxi + Trip + Contingency + Alternate + Final Reserve + Additional + Extra + Margin; MDF = Alternate + Final Reserve',
     assumptions: [
       'Los valores de reserva/contingencia por defecto son referenciales [REF. INTERNACIONAL].',
       'Requisitos RAC 91/121/135: pendientes de validación normativa oficial.',
-      'Flujos por fase son datos de performance (POH/AFM) o estimación del usuario.',
+      'Trip fuel se calcula a partir del tiempo y flujo estimado del trayecto.',
+      'MDF (Minimum Diversion Fuel) representa el combustible mínimo para proceder al alterno y aterrizar con la reserva final reglamentaria.',
     ],
   },
 };

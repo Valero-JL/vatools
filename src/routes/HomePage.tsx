@@ -25,7 +25,7 @@ const MODULES = [
   {
     to: '/fuel',
     title: 'Combustible',
-    desc: 'Desglose por fases y tipo de operación, con alertas de déficit.',
+    desc: 'Cálculo de trip fuel y minimum diversion fuel con alertas de déficit.',
   },
 ];
 

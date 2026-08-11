@@ -9,6 +9,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import { getFuelLabel } from '../../core/fuel/fuel';
 
 const COLORS = ['#22d3ee', '#3b82f6', '#22c55e', '#f59e0b', '#a78bfa', '#ef4444', '#94a3b8', '#14b8a6'];
 
@@ -19,7 +20,7 @@ interface Props {
 export function FuelCharts({ breakdown }: Props) {
   const data = Object.entries(breakdown)
     .filter(([, v]) => v > 0)
-    .map(([name, value]) => ({ name, value }));
+    .map(([name, value]) => ({ name: getFuelLabel(name), value }));
 
   if (data.length === 0) return null;
 
