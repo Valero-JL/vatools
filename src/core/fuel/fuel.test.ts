@@ -43,6 +43,21 @@ describe('calculateFuel', () => {
         r.breakdown.discretionary,
       2,
     );
+    expect(r.mdf).toBeCloseTo(r.breakdown.alternate + r.breakdown.finalReserve, 2);
+    // MDF es indicador: no altera el total
+    expect(r.total).not.toBe(r.mdf);
+  });
+
+  it('MDF = Alterno + Reserva final', () => {
+    const r = calculateFuel({
+      unit: 'L',
+      tripFlowPerHour: 40,
+      tripTimeMin: 60,
+      alternateTimeMin: 45,
+    });
+    expect(r.breakdown.alternate).toBeCloseTo(30, 1);
+    expect(r.breakdown.finalReserve).toBeCloseTo(20, 1);
+    expect(r.mdf).toBeCloseTo(50, 1);
   });
 
   it('usa 5% del trip como contingencia por defecto', () => {

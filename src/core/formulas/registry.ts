@@ -78,18 +78,19 @@ export const FORMULAS: Record<string, FormulaMeta> = {
   },
   fuel: {
     id: 'fuel-components',
-    version: '3.0.0',
+    version: '3.1.0',
     source: 'Planificación educativa por componentes (tiempo × flujo)',
     nature: 'educational',
     certainty: 'verified',
     formula:
-      'Total Trip Fuel = Taxi + Trip + Contingencia + Alterno + Reserva final(30 min) + Adicional + Discrecional',
+      'Total Trip Fuel = Taxi + Trip + Contingencia + Alterno + Reserva final(30 min) + Adicional + Discrecional; MDF = Alterno + Reserva final',
     assumptions: [
       'Cada componente: cantidad manual tiene prioridad; si no, tiempo × flujo.',
       'Contingencia por defecto = 5% del Trip (editable), salvo tiempo o cantidad manual.',
-      'Reserva final fija en 30 min (no editable) y siempre se suma.',
+      'Reserva final fija en 30 min (no editable) y siempre se suma al Total.',
       'Adicional y Discrecional son opcionales: vacío = 0.',
       'El flujo de viaje se aplica a todos los componentes calculados por tiempo.',
+      'MDF es un indicador de referencia/monitoreo y no se suma al Total Trip Fuel.',
     ],
   },
 };

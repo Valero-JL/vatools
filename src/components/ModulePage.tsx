@@ -48,9 +48,23 @@ export function ResultGrid({ children }: { children: ReactNode }) {
   return <div className={styles.results}>{children}</div>;
 }
 
-export function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
+export function ResultsStack({ children }: { children: ReactNode }) {
+  return <div className={styles.resultsStack}>{children}</div>;
+}
+
+export function Stat({
+  label,
+  value,
+  hint,
+  tone = 'default',
+}: {
+  label: string;
+  value: string;
+  hint?: string;
+  tone?: 'default' | 'monitor';
+}) {
   return (
-    <div className={styles.stat}>
+    <div className={`${styles.stat} ${tone === 'monitor' ? styles.statMonitor : ''}`}>
       <span>{label}</span>
       <strong className="mono">{value}</strong>
       {hint ? <small>{hint}</small> : null}

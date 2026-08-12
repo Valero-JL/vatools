@@ -1,0 +1,311 @@
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.tab {
+  min-height: 44px;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.tabActive {
+  color: var(--text);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.tabMeta {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.tabActive .tabMeta {
+  color: var(--accent);
+}
+
+.panelStack {
+  display: grid;
+  gap: 1rem;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.progressGlobal {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.block,
+.briefingSection {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 2px);
+  padding: 1rem 1.1rem 1.15rem;
+  box-shadow: var(--shadow);
+}
+
+.blockEmergency {
+  border-color: color-mix(in srgb, var(--danger) 70%, var(--border));
+  background: color-mix(in srgb, var(--danger) 12%, var(--surface));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--danger) 35%, transparent);
+}
+
+.blockHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.blockHeader h2 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.blockEmergency .blockHeader {
+  border-bottom-color: color-mix(in srgb, var(--danger) 45%, var(--border));
+}
+
+.blockEmergency .blockHeader h2 {
+  color: var(--danger);
+}
+
+.blockProgress {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.itemList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.item {
+  margin: 0;
+}
+
+.itemLabel {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.65rem;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.35rem 0.4rem;
+  border-radius: var(--radius);
+}
+
+.itemLabel:hover {
+  background: var(--accent-dim);
+}
+
+.checkbox {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: var(--ok);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.itemText {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.35rem;
+  align-items: baseline;
+  min-width: 0;
+}
+
+.itemLeft {
+  font-weight: 500;
+}
+
+.dots {
+  border-bottom: 1px dotted color-mix(in srgb, var(--text-muted) 70%, transparent);
+  min-width: 1.5rem;
+  height: 0.7em;
+  align-self: end;
+  margin-bottom: 0.15em;
+}
+
+.itemRight {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.itemDone .itemText {
+  color: var(--ok);
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
+
+.itemDone .itemRight {
+  color: var(--ok);
+}
+
+.itemDone .dots {
+  border-bottom-color: color-mix(in srgb, var(--ok) 55%, transparent);
+}
+
+.callout {
+  margin: 0.15rem 0 0.35rem 2rem;
+  padding: 0.35rem 0.55rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.calloutEmergency {
+  color: var(--danger);
+}
+
+.subtitle {
+  margin: 0.55rem 0 0.2rem;
+  padding: 0.25rem 0;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  list-style: none;
+}
+
+.blockEmergency .subtitle {
+  color: color-mix(in srgb, var(--danger) 80%, var(--text));
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.briefingTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.briefingTable th {
+  text-align: left;
+  padding: 0.55rem 0.65rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.briefingTable td {
+  padding: 0.65rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  vertical-align: top;
+}
+
+.colCheck {
+  width: 2.25rem;
+}
+
+.colStep {
+  width: 3.5rem;
+}
+
+.stepBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.cellBoth {
+  font-weight: 500;
+}
+
+.cellPf,
+.cellPm {
+  color: var(--text);
+}
+
+.briefingRow.itemDone td:not(.colCheck) {
+  color: var(--ok);
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
+
+.briefingRow.itemDone .stepBadge {
+  border-color: color-mix(in srgb, var(--ok) 50%, var(--border));
+  color: var(--ok);
+}
+
+.notes {
+  margin: 1rem 0 0;
+  padding-left: 1.2rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.noteNum {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--accent);
+}
+
+@media (max-width: 640px) {
+  .itemRight {
+    white-space: normal;
+  }
+
+  .itemText {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+
+  .dots {
+    display: none;
+  }
+
+  .itemRight {
+    text-align: left;
+    color: var(--text-muted);
+  }
+}

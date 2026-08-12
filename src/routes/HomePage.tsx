@@ -28,6 +28,11 @@ const MODULES = [
     title: 'Combustible',
     desc: 'Planificación por componentes y Total Trip Fuel (taxi, trip, contingencia, alterno, reserva…).',
   },
+  {
+    to: '/checklists',
+    title: 'Checklists y Briefing',
+    desc: 'Checklist de aeronave y briefings de salida/llegada (PF / PM) con seguimiento de progreso.',
+  },
 ];
 
 export function HomePage() {

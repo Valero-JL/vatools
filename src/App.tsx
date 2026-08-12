@@ -7,6 +7,7 @@ import { TocPage } from './routes/TocPage';
 import { TodPage } from './routes/TodPage';
 import { TimePage } from './routes/TimePage';
 import { FuelPage } from './routes/FuelPage';
+import { ChecklistsBriefingPage } from './routes/ChecklistsBriefingPage';
 import { SourcesPage } from './routes/SourcesPage';
 import { AboutPage } from './routes/AboutPage';
 
@@ -22,6 +23,7 @@ export default function App() {
             <Route path="tod" element={<TodPage />} />
             <Route path="time" element={<TimePage />} />
             <Route path="fuel" element={<FuelPage />} />
+            <Route path="checklists" element={<ChecklistsBriefingPage />} />
             <Route path="sources" element={<SourcesPage />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />

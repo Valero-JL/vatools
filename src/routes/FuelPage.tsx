@@ -5,7 +5,7 @@ import {
   ModulePage,
   Panel,
   PrimaryButton,
-  ResultGrid,
+  ResultsStack,
   SecondaryButton,
   Stat,
 } from '../components/ModulePage';
@@ -345,9 +345,15 @@ export function FuelPage() {
 
       {result && (
         <Panel title="Resultados">
-          <ResultGrid>
+          <ResultsStack>
             <Stat label="Total Trip Fuel" value={`${result.total} ${result.unit}`} />
-          </ResultGrid>
+            <Stat
+              tone="monitor"
+              label="MDF (mínimo para desviarse con reserva final intacta)"
+              value={`${result.mdf} ${result.unit}`}
+              hint="Alterno + Reserva final · indicador de referencia (no incluido en el Total)"
+            />
+          </ResultsStack>
           <div style={{ marginTop: '1rem', overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>

@@ -13,13 +13,16 @@ export function Field({ label, htmlFor, error, hint, children }: FieldProps) {
   return (
     <div className={styles.field}>
       <label htmlFor={htmlFor}>{label}</label>
-      {children}
-      {hint && !error ? <p className={styles.hint}>{hint}</p> : null}
-      {error ? (
-        <p className={styles.error} role="alert">
-          {error}
-        </p>
-      ) : null}
+      <div className={styles.control}>{children}</div>
+      <div className={styles.meta}>
+        {error ? (
+          <p className={styles.error} role="alert">
+            {error}
+          </p>
+        ) : hint ? (
+          <p className={styles.hint}>{hint}</p>
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -29,10 +32,14 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 };
 
 export function UnitInput({ unit, className, ...props }: InputProps) {
+  if (!unit) {
+    return <input className={`${styles.input} ${className ?? ''}`} {...props} />;
+  }
+
   return (
     <div className={styles.unitWrap}>
       <input className={`${styles.input} ${className ?? ''}`} {...props} />
-      {unit ? <span className={styles.unit}>{unit}</span> : null}
+      <span className={styles.unit}>{unit}</span>
     </div>
   );
 }

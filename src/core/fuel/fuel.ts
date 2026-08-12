@@ -136,10 +136,14 @@ export function calculateFuel(input: FuelData): FuelResult {
     2,
   );
 
+  // Indicador de monitoreo: no se suma al Total Trip Fuel.
+  const mdf = round(alternate + finalReserve, 2);
+
   return {
     unit: input.unit,
     breakdown,
     total,
+    mdf,
     finalReserveMin,
   };
 }

@@ -13,6 +13,7 @@ const NAV = [
   { to: '/tod', label: 'TOD' },
   { to: '/time', label: 'Tiempos' },
   { to: '/fuel', label: 'Combustible' },
+  { to: '/checklists', label: 'Checklists' },
   { to: '/sources', label: 'Fuentes' },
   { to: '/about', label: 'Acerca de' },
 ];

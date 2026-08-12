@@ -28,9 +28,13 @@
 }
 
 .grid {
+  --control-height: 44px;
   display: grid;
-  gap: 0.9rem;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  column-gap: 0.9rem;
+  /* Coincide con el gap interno del Field (subgrid ocupa 3 filas del padre). */
+  row-gap: 0.35rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  align-items: stretch;
 }
 
 .actions {
@@ -89,4 +93,15 @@
 
 .stat strong {
   font-size: 1.35rem;
+}
+
+.statMonitor {
+  border-style: dashed;
+  background: color-mix(in srgb, var(--accent-dim) 55%, var(--surface-2));
+}
+
+.resultsStack {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
 }

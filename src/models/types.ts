@@ -139,6 +139,8 @@ export interface FuelResult {
   unit: VolumeUnit;
   breakdown: FuelBreakdown;
   total: number;
+  /** Minimum Diversion Fuel = Alterno + Reserva final (indicador; no suma al total). */
+  mdf: number;
   finalReserveMin: number;
 }
 
