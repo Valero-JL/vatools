@@ -1,35 +1,48 @@
 :root,
 [data-theme='dark'] {
-  --bg: #0b1220;
-  --surface: #151e2e;
-  --surface-2: #1c273a;
-  --text: #e8edf4;
-  --text-muted: #9aa7b8;
-  --accent: #22d3ee;
-  --accent-dim: rgba(34, 211, 238, 0.15);
+  /* Juan Luis Valero Brand Manual 2025 */
+  --electric-blue: #38b6ff;
+  --deep-blue: #0066ff;
+  --midnight: #0a0c10;
+  --navy-dark: #0e1520;
+  --pure-white: #ffffff;
+  --steel-grey: #8a9bb0;
+
+  --bg: var(--midnight);
+  --surface: var(--navy-dark);
+  --surface-2: #151d2a;
+  --text: var(--pure-white);
+  --text-muted: var(--steel-grey);
+  --accent: var(--electric-blue);
+  --accent-strong: var(--deep-blue);
+  --accent-dim: rgba(56, 182, 255, 0.14);
   --ok: #22c55e;
   --caution: #f59e0b;
   --danger: #ef4444;
-  --info: #3b82f6;
-  --border: rgba(154, 167, 184, 0.22);
-  --focus: #22d3ee;
-  --shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
-  --font-ui: 'IBM Plex Sans', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-  --radius: 10px;
+  --info: var(--deep-blue);
+  --border: rgba(138, 155, 176, 0.22);
+  --focus: var(--electric-blue);
+  --shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  --font-ui: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'Inter', ui-monospace, monospace;
+  --radius: 4px;
   --space: 8px;
+  --accent-line: var(--electric-blue);
 }
 
 [data-theme='light'] {
-  --bg: #f5f7fa;
-  --surface: #ffffff;
-  --surface-2: #eef2f7;
-  --text: #0b1220;
-  --text-muted: #5b6b7c;
-  --accent: #0891b2;
-  --accent-dim: rgba(8, 145, 178, 0.12);
-  --border: rgba(11, 18, 32, 0.12);
-  --shadow: 0 8px 24px rgba(11, 18, 32, 0.08);
+  --bg: var(--pure-white);
+  --surface: #f4f7fb;
+  --surface-2: #e8eef6;
+  --text: var(--midnight);
+  --text-muted: #5c6b7f;
+  --accent: var(--deep-blue);
+  --accent-strong: var(--electric-blue);
+  --accent-dim: rgba(0, 102, 255, 0.1);
+  --border: rgba(10, 12, 16, 0.12);
+  --focus: var(--deep-blue);
+  --shadow: 0 8px 24px rgba(10, 12, 16, 0.08);
+  --info: var(--deep-blue);
 }
 
 *,
@@ -47,13 +60,22 @@ body,
 body {
   margin: 0;
   font-family: var(--font-ui);
+  font-weight: 400;
   background:
-    radial-gradient(1200px 600px at 10% -10%, rgba(34, 211, 238, 0.08), transparent 55%),
-    radial-gradient(900px 500px at 100% 0%, rgba(59, 130, 246, 0.08), transparent 50%),
+    radial-gradient(1100px 520px at 8% -12%, rgba(56, 182, 255, 0.08), transparent 55%),
+    radial-gradient(900px 480px at 100% 0%, rgba(0, 102, 255, 0.07), transparent 50%),
+    linear-gradient(180deg, color-mix(in srgb, var(--navy-dark) 55%, var(--bg)) 0%, var(--bg) 42%),
     var(--bg);
   color: var(--text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+}
+
+[data-theme='light'] body {
+  background:
+    radial-gradient(1100px 520px at 8% -12%, rgba(0, 102, 255, 0.06), transparent 55%),
+    radial-gradient(900px 480px at 100% 0%, rgba(56, 182, 255, 0.05), transparent 50%),
+    var(--bg);
 }
 
 a {
@@ -104,4 +126,5 @@ textarea {
 .mono {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
 }

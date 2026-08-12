@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { BrandLogo } from '../components/BrandLogo';
 import { ModulePage, Panel } from '../components/ModulePage';
 import { OPERATIONAL_DISCLAIMER } from '../data/warnings';
 
@@ -8,6 +9,13 @@ export function AboutPage() {
       title="Acerca de"
       subtitle="Valero Aviation Tools (vatools) — suite educativa de cálculo y planificación básica de vuelo."
     >
+      <Panel title="Marca">
+        <BrandLogo size="lg" />
+        <p style={{ marginTop: '1rem', color: 'var(--text-muted)' }}>
+          Identidad visual según Brand Manual Juan Luis Valero 2025 · Electric Blue · Midnight ·
+          Inter.
+        </p>
+      </Panel>
       <Panel title="Propósito">
         <p>
           Ofrecer calculadoras aeronáuticas claras y trazables (viento, TOC, TOD, tiempos y

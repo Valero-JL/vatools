@@ -40,7 +40,7 @@ export function RunwayDiagram({
           width={runwayW}
           height={runwayLen}
           rx="3"
-          fill="#3a465c"
+          fill="var(--surface)"
           stroke="var(--text-muted)"
         />
         <text

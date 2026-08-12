@@ -77,16 +77,19 @@ export const FORMULAS: Record<string, FormulaMeta> = {
     ],
   },
   fuel: {
-    id: 'fuel-trip',
-    version: '2.0.0',
-    source: 'Cinemática básica de consumo (tiempo × flujo)',
+    id: 'fuel-components',
+    version: '3.0.0',
+    source: 'Planificación educativa por componentes (tiempo × flujo)',
     nature: 'educational',
     certainty: 'verified',
-    formula: 'Trip fuel = (tiempo_min / 60) × flujo_por_hora  (o cantidad manual)',
+    formula:
+      'Total Trip Fuel = Taxi + Trip + Contingencia + Alterno + Reserva final(30 min) + Adicional + Discrecional',
     assumptions: [
-      'No incluye taxi, contingencia, alterno, reserva final ni márgenes operacionales.',
-      'El flujo se asume constante durante el tiempo de viaje indicado.',
-      'Si se indica cantidad manual, esa tiene prioridad sobre tiempo × flujo.',
+      'Cada componente: cantidad manual tiene prioridad; si no, tiempo × flujo.',
+      'Contingencia por defecto = 5% del Trip (editable), salvo tiempo o cantidad manual.',
+      'Reserva final fija en 30 min (no editable) y siempre se suma.',
+      'Adicional y Discrecional son opcionales: vacío = 0.',
+      'El flujo de viaje se aplica a todos los componentes calculados por tiempo.',
     ],
   },
 };

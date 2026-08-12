@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { BrandLogo } from '../components/BrandLogo';
 import styles from './HomePage.module.css';
 
 const MODULES = [
@@ -25,7 +26,7 @@ const MODULES = [
   {
     to: '/fuel',
     title: 'Combustible',
-    desc: 'Cálculo básico de trip fuel: tiempo de viaje × flujo de consumo.',
+    desc: 'Planificación por componentes y Total Trip Fuel (taxi, trip, contingencia, alterno, reserva…).',
   },
 ];
 
@@ -33,6 +34,7 @@ export function HomePage() {
   return (
     <div className={styles.home}>
       <section className={styles.hero}>
+        <BrandLogo size="lg" className={styles.heroLogo} />
         <p className={styles.eyebrow}>Suite educativa de cálculo aeronáutico</p>
         <h1>Valero Aviation Tools</h1>
         <p className={styles.lead}>

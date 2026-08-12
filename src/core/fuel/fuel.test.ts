@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { calculateFuel, FuelValidationError, phaseFuel } from './fuel';
+import { calculateFuel, FUEL_DEFAULTS, FuelValidationError, phaseFuel } from './fuel';
 
 describe('phaseFuel', () => {
   it('prioriza cantidad manual sobre tiempo × flujo', () => {
@@ -12,37 +12,104 @@ describe('phaseFuel', () => {
 });
 
 describe('calculateFuel', () => {
-  it('calcula trip fuel = tiempo × flujo', () => {
+  it('suma todos los componentes al Total Trip Fuel', () => {
     const r = calculateFuel({
       unit: 'L',
-      tripTimeMin: 60,
       tripFlowPerHour: 40,
+      taxiTimeMin: 10,
+      tripTimeMin: 60,
+      contingencyPercent: 5,
+      alternateTimeMin: 30,
+      additionalFuelCustom: 10,
+      discretionaryTimeMin: 15,
     });
-    expect(r.trip).toBeCloseTo(40, 1);
-    expect(r.unit).toBe('L');
+
+    // taxi 10/60*40 = 6.67; trip = 40; cont = 2; alt = 20; final = 20; add = 10; disc = 10
+    expect(r.breakdown.taxi).toBeCloseTo(6.67, 1);
+    expect(r.breakdown.trip).toBeCloseTo(40, 1);
+    expect(r.breakdown.contingency).toBeCloseTo(2, 1);
+    expect(r.breakdown.alternate).toBeCloseTo(20, 1);
+    expect(r.breakdown.finalReserve).toBeCloseTo(20, 1);
+    expect(r.finalReserveMin).toBe(30);
+    expect(r.breakdown.additional).toBe(10);
+    expect(r.breakdown.discretionary).toBeCloseTo(10, 1);
+    expect(r.total).toBeCloseTo(
+      r.breakdown.taxi +
+        r.breakdown.trip +
+        r.breakdown.contingency +
+        r.breakdown.alternate +
+        r.breakdown.finalReserve +
+        r.breakdown.additional +
+        r.breakdown.discretionary,
+      2,
+    );
   });
 
-  it('usa cantidad manual si se indica', () => {
+  it('usa 5% del trip como contingencia por defecto', () => {
     const r = calculateFuel({
-      unit: 'usgal',
+      unit: 'L',
+      tripFlowPerHour: 100,
       tripTimeMin: 60,
-      tripFlowPerHour: 40,
-      tripFuelCustom: 25,
     });
-    expect(r.trip).toBe(25);
+    expect(r.breakdown.trip).toBe(100);
+    expect(r.breakdown.contingency).toBe(5);
+  });
+
+  it('prioriza cantidad manual de contingencia sobre % y tiempo', () => {
+    const r = calculateFuel({
+      unit: 'L',
+      tripFlowPerHour: 40,
+      tripTimeMin: 60,
+      contingencyTimeMin: 30,
+      contingencyFuelCustom: 7,
+      contingencyPercent: 5,
+    });
+    expect(r.breakdown.contingency).toBe(7);
+  });
+
+  it('prioriza tiempo de contingencia sobre el % del trip', () => {
+    const r = calculateFuel({
+      unit: 'L',
+      tripFlowPerHour: 40,
+      tripTimeMin: 60,
+      contingencyTimeMin: 30,
+    });
+    expect(r.breakdown.contingency).toBeCloseTo(20, 1);
+  });
+
+  it('reserva final siempre 30 min × flujo', () => {
+    const r = calculateFuel({
+      unit: 'L',
+      tripFlowPerHour: 60,
+      tripFuelCustom: 50,
+    });
+    expect(r.finalReserveMin).toBe(FUEL_DEFAULTS.finalReserveMin);
+    expect(r.breakdown.finalReserve).toBe(30);
+  });
+
+  it('opcionales vacíos suman 0', () => {
+    const r = calculateFuel({
+      unit: 'L',
+      tripFlowPerHour: 40,
+      tripTimeMin: 60,
+      taxiTimeMin: 0,
+    });
+    expect(r.breakdown.additional).toBe(0);
+    expect(r.breakdown.discretionary).toBe(0);
   });
 
   it('rechaza valores negativos', () => {
     expect(() =>
       calculateFuel({
         unit: 'L',
-        tripTimeMin: -10,
         tripFlowPerHour: 40,
+        tripTimeMin: -10,
       }),
     ).toThrow(FuelValidationError);
   });
 
-  it('exige tiempo+flujo o cantidad manual', () => {
+  it('exige flujo y trip', () => {
     expect(() => calculateFuel({ unit: 'L' })).toThrow(FuelValidationError);
+    expect(() => calculateFuel({ unit: 'L', tripFlowPerHour: 40 })).toThrow(FuelValidationError);
   });
 });

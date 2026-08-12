@@ -1,0 +1,23 @@
+.logo {
+  display: block;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  /* Brand clear-space: keep breathing room around the wordmark */
+  flex-shrink: 0;
+}
+
+.sm {
+  width: 120px;
+  min-width: 120px;
+}
+
+.md {
+  width: 160px;
+  min-width: 140px;
+}
+
+.lg {
+  width: min(280px, 70vw);
+  min-width: 160px;
+}

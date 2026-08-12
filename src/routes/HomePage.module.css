@@ -7,18 +7,25 @@
   padding: 1.5rem 0 0.5rem;
 }
 
+.heroLogo {
+  margin-bottom: 1.25rem;
+}
+
 .eyebrow {
   margin: 0 0 0.4rem;
   color: var(--accent);
-  font-size: 0.9rem;
-  letter-spacing: 0.04em;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .hero h1 {
   margin: 0 0 0.6rem;
   font-size: clamp(2rem, 5vw, 2.8rem);
+  font-weight: 900;
   line-height: 1.15;
+  letter-spacing: -0.02em;
 }
 
 .lead {

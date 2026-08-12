@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useState } from 'react';
 import { WarningBanner } from './WarningBanner';
+import { BrandLogo } from './BrandLogo';
 import { getWarning } from '../data/warnings';
 import { useTheme } from '../theme/ThemeProvider';
 import styles from './Layout.module.css';
@@ -26,11 +27,9 @@ export function Layout() {
       <header className={styles.header}>
         <div className={`container ${styles.headerInner}`}>
           <NavLink to="/" className={styles.brand} onClick={() => setMenuOpen(false)}>
-            <span className={styles.logo} aria-hidden>
-              ✈
-            </span>
-            <span>
-              <strong>Valero Aviation Tools</strong>
+            <BrandLogo size="md" />
+            <span className={styles.brandText}>
+              <strong>Aviation Tools</strong>
               <small>VATools · referencia educativa</small>
             </span>
           </NavLink>
@@ -73,9 +72,10 @@ export function Layout() {
       </main>
 
       <footer className={styles.footer}>
-        <div className="container">
+        <div className={`container ${styles.footerInner}`}>
+          <BrandLogo size="sm" />
           <p>
-            Valero Aviation Tools v0.1 · Uso educativo · No operacional ·{' '}
+            Valero Aviation Tools v0.1 · Juan Luis Valero · Uso educativo · No operacional ·{' '}
             <NavLink to="/sources">Fuentes</NavLink>
           </p>
         </div>

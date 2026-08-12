@@ -109,14 +109,37 @@ export interface TimeResult {
 
 export interface FuelData {
   unit: VolumeUnit;
-  tripTimeMin?: number;
   tripFlowPerHour?: number;
+  taxiTimeMin?: number;
+  taxiFuelCustom?: number;
+  tripTimeMin?: number;
   tripFuelCustom?: number;
+  contingencyTimeMin?: number;
+  contingencyFuelCustom?: number;
+  contingencyPercent?: number;
+  alternateTimeMin?: number;
+  alternateFuelCustom?: number;
+  additionalTimeMin?: number;
+  additionalFuelCustom?: number;
+  discretionaryTimeMin?: number;
+  discretionaryFuelCustom?: number;
+}
+
+export interface FuelBreakdown {
+  taxi: number;
+  trip: number;
+  contingency: number;
+  alternate: number;
+  finalReserve: number;
+  additional: number;
+  discretionary: number;
 }
 
 export interface FuelResult {
-  trip: number;
   unit: VolumeUnit;
+  breakdown: FuelBreakdown;
+  total: number;
+  finalReserveMin: number;
 }
 
 export interface FormulaMeta {

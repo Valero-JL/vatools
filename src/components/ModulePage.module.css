@@ -51,8 +51,12 @@
 
 .primary {
   background: var(--accent);
-  color: #06202a;
-  font-weight: 600;
+  color: var(--midnight);
+  font-weight: 700;
+}
+
+[data-theme='light'] .primary {
+  color: var(--pure-white);
 }
 
 .secondary {
