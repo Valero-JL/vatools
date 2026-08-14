@@ -14,6 +14,7 @@ const NAV = [
   { to: '/time', label: 'Tiempos' },
   { to: '/fuel', label: 'Combustible' },
   { to: '/checklists', label: 'Checklists' },
+  { to: '/a320', label: 'A320' },
   { to: '/sources', label: 'Fuentes' },
   { to: '/about', label: 'Acerca de' },
 ];

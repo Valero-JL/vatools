@@ -33,6 +33,11 @@ const MODULES = [
     title: 'Checklists y Briefing',
     desc: 'Checklist de aeronave y briefings de salida/llegada (PF / PM) con seguimiento de progreso.',
   },
+  {
+    to: '/a320',
+    title: 'A320',
+    desc: 'Checklist A320 por pasos y briefing (Departure / Threats / Arrival).',
+  },
 ];
 
 export function HomePage() {
