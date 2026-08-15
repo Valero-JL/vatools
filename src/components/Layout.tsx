@@ -15,6 +15,7 @@ const NAV = [
   { to: '/fuel', label: 'Combustible' },
   { to: '/checklists', label: 'Checklists' },
   { to: '/a320', label: 'A320' },
+  { to: '/briefing-tool', label: 'Briefing Tool' },
   { to: '/sources', label: 'Fuentes' },
   { to: '/about', label: 'Acerca de' },
 ];
@@ -77,7 +78,7 @@ export function Layout() {
         <div className={`container ${styles.footerInner}`}>
           <BrandLogo size="sm" />
           <p>
-            Valero Aviation Tools v0.1 · Juan Luis Valero · Uso educativo · No operacional ·{' '}
+            Aviation Tools v0.1 · Juan Luis Valero · Uso educativo · No operacional ·{' '}
             <NavLink to="/sources">Fuentes</NavLink>
           </p>
         </div>

@@ -3,21 +3,22 @@
   width: auto;
   height: auto;
   object-fit: contain;
-  /* Brand clear-space: keep breathing room around the wordmark */
   flex-shrink: 0;
+  background: #000;
+  border-radius: var(--radius);
 }
 
 .sm {
-  width: 120px;
+  width: 140px;
   min-width: 120px;
 }
 
 .md {
-  width: 160px;
-  min-width: 140px;
+  width: 180px;
+  min-width: 150px;
 }
 
 .lg {
-  width: min(280px, 70vw);
-  min-width: 160px;
+  width: min(320px, 78vw);
+  min-width: 180px;
 }

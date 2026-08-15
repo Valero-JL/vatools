@@ -1,4 +1,3 @@
-import { useTheme } from '../theme/ThemeProvider';
 import styles from './BrandLogo.module.css';
 
 type BrandLogoProps = {
@@ -7,14 +6,12 @@ type BrandLogoProps = {
 };
 
 export function BrandLogo({ size = 'md', className }: BrandLogoProps) {
-  const { theme } = useTheme();
-  const file = theme === 'dark' ? 'logo-dark.png' : 'logo-light.png';
-  const src = `${import.meta.env.BASE_URL}brand/${file}`;
+  const src = `${import.meta.env.BASE_URL}brand/vatools-logo.png`;
 
   return (
     <img
       src={src}
-      alt="Juan Luis Valero"
+      alt="VA Tools — Aviation Nice Tool"
       className={`${styles.logo} ${styles[size]} ${className ?? ''}`}
       decoding="async"
     />

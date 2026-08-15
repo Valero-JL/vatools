@@ -38,6 +38,11 @@ const MODULES = [
     title: 'A320',
     desc: 'Checklist A320 por pasos y briefing (Departure / Threats / Arrival).',
   },
+  {
+    to: '/briefing-tool',
+    title: 'Briefing Tool',
+    desc: 'Accesos rápidos a EFPL, NOTAM, METAR/TAF, AWOS, Windy, RAC y más.',
+  },
 ];
 
 export function HomePage() {

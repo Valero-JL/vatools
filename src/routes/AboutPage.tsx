@@ -12,8 +12,7 @@ export function AboutPage() {
       <Panel title="Marca">
         <BrandLogo size="lg" />
         <p style={{ marginTop: '1rem', color: 'var(--text-muted)' }}>
-          Identidad visual según Brand Manual Juan Luis Valero 2025 · Electric Blue · Midnight ·
-          Inter.
+          VA Tools — Aviation Nice Tool.
         </p>
       </Panel>
       <Panel title="Propósito">
